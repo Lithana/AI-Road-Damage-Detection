@@ -6,3 +6,4 @@ numpy
 pillow
 pyserial
 reportlab
+gunicorn
