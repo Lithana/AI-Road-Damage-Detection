@@ -1,0 +1,8 @@
+flask
+ultralytics
+opencv-python
+requests
+numpy
+pillow
+pyserial
+reportlab

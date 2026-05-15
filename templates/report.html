@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analysis Report - {{ report.id[:8] }}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script>
+    function exportReport() {
+        window.print();
+    }
+</script>
+</head>
+
+<body>
+
+<!-- ---------------- SIDEBAR (Hidden in Print) ---------------- -->
+<div class="sidebar no-print">
+    <div class="sidebar-header">
+        <a href="/" class="logo-link"><img src="/static/images/logo.png" class="brand-logo" alt="Veethi Shield Logo"></a>
+        <h2>Veethi Shield</h2>
+    </div>
+    
+    <div class="sidebar-section-title">Operational Hub</div>
+    <a href="/">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+        Command Center
+    </a>
+    <a href="/history" class="active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        Analysis History
+    </a>
+    
+    <div class="sidebar-section-title" style="margin-top: 24px;">Systems</div>
+    <a href="/telemetry">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+        Telemetry & GPS
+    </a>
+</div>
+
+<!-- ---------------- MAIN CONTENT ---------------- -->
+<div class="container report-container">
+
+    <div class="header-area no-print">
+        <div>
+            <h1 class="header-title">Detailed Report</h1>
+            <p class="header-subtitle">Analysis Document: {{ report.id }}</p>
+        </div>
+        <button onclick="exportReport()" style="background: var(--text-primary); color: white; display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Export to PDF
+        </button>
+    </div>
+
+    <!-- PRINTABLE REPORT DOCUMENT -->
+    <div class="report-document">
+        
+        <!-- Report Header -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #e2e8f0; padding-bottom: 24px; margin-bottom: 32px;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                    <div style="width: 32px; height: 32px; background: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                    </div>
+                    <h2 style="margin: 0; font-size: 24px; font-weight: 700; color: #0f172a; letter-spacing: -0.5px;">AeroVision</h2>
+                </div>
+                <div style="color: #64748b; font-size: 14px;">Infrastructure Assessment Report</div>
+            </div>
+            
+            <div style="text-align: right;">
+                <div style="font-size: 20px; font-weight: 600; color: #0f172a; margin-bottom: 4px;">REPORT #{{ report.id[:8].upper() }}</div>
+                <div style="color: #64748b; font-size: 14px;">Generated: {{ report.timestamp }}</div>
+            </div>
+        </div>
+
+        <!-- Summary Metrics -->
+        <h3 style="font-size: 16px; color: #0f172a; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Executive Summary</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-bottom: 40px;">
+            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div style="color: #64748b; font-size: 13px; font-weight: 500; text-transform: uppercase; margin-bottom: 8px;">Total Anomalies</div>
+                <div style="font-size: 28px; font-weight: 700; color: #2563eb;">{{ report.anomalies }} <span style="font-size: 16px; color: #64748b; font-weight: 500;">(Count)</span></div>
+                <div style="font-size: 14px; font-weight: 600; color: #475569; margin-top: 8px;">Severity: {{ report.severity }}</div>
+            </div>
+            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div style="color: #64748b; font-size: 13px; font-weight: 500; text-transform: uppercase; margin-bottom: 8px;">Assessment Status</div>
+                <div style="font-size: 28px; font-weight: 700; color: {% if report.status == 'Perfect' %}#16a34a{% else %}#ea580c{% endif %};">{{ report.status }}</div>
+            </div>
+            <div style="background: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                <div style="color: #64748b; font-size: 13px; font-weight: 500; text-transform: uppercase; margin-bottom: 8px;">Media Source</div>
+                <div style="font-size: 24px; font-weight: 600; color: #0f172a; word-break: break-all;">{{ report.type }} File</div>
+            </div>
+        </div>
+
+        {% if report.result_file %}
+        <div style="margin-bottom: 40px; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #f8fafc; padding: 12px;">
+            <h3 style="font-size: 14px; color: #64748b; margin-top: 0; margin-bottom: 12px; font-weight: 600; text-transform: uppercase;">Visual Evidence</h3>
+            <img src="{{ report.result_file }}" alt="Analysis Result" style="width: 100%; border-radius: 8px; border: 1px solid #e2e8f0;">
+        </div>
+        {% endif %}
+
+        <!-- Technical Details -->
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; margin-bottom: 40px;">
+            <div>
+                <h3 style="font-size: 16px; color: #0f172a; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">Technical Details</h3>
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <th style="padding: 12px; color: #64748b; font-weight: 500; width: 40%;">Parameter</th>
+                        <th style="padding: 12px; color: #0f172a; font-weight: 600;">Value</th>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px; color: #64748b;">Filename</td>
+                        <td style="padding: 12px; font-weight: 500;">{{ report.filename }}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px; color: #64748b;">Area / Suburb</td>
+                        <td style="padding: 12px; font-weight: 600; color: #2563eb;">{{ report.specific_location }}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px; color: #64748b;">Full Address</td>
+                        <td style="padding: 12px; font-weight: 500; font-size: 13px; line-height: 1.4;">{{ report.location_name }}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px; color: #64748b;">Coordinates</td>
+                        <td style="padding: 12px; font-weight: 500;">{{ report.latitude }}, {{ report.longitude }}</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 12px; color: #64748b;">Inference</td>
+                        <td style="padding: 12px; font-weight: 500;">YOLOv8 Engine</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Map Visualization -->
+            <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #f8fafc;">
+                <div id="map" style="width: 100%; height: 200px;"></div>
+                <div style="padding: 12px; font-size: 12px; color: #64748b; text-align: center; border-top: 1px solid #e2e8f0;">
+                    Geographic Assessment Point
+                </div>
+            </div>
+        </div>
+
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                var map = L.map('map').setView([{{ report.latitude }}, {{ report.longitude }}], 15);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap'
+                }).addTo(map);
+                L.marker([{{ report.latitude }}, {{ report.longitude }}]).addTo(map)
+                    .bindPopup('Damage Detected Here')
+                    .openPopup();
+            });
+        </script>
+        
+        <!-- Footer -->
+        <div style="margin-top: 64px; text-align: center; color: #94a3b8; font-size: 13px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
+            This is an automatically generated document by AeroVision Enterprise Systems.<br>
+            For validation, please quote Report #{{ report.id[:8].upper() }}.
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

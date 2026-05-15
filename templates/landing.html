@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veethi Shield - Enterprise Infrastructure Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="landing-body">
+
+<div class="portal-container">
+    <div class="portal-header">
+        <img src="/static/images/logo.png" class="portal-logo" alt="Veethi Shield Logo">
+        <h1 class="portal-title">Veethi Shield</h1>
+        <p class="portal-subtitle">Advanced Road Damage Detection & Infrastructure Intelligence</p>
+    </div>
+
+    <div class="portal-grid">
+        <!-- 1. SCAN -->
+        <a href="/scan" class="portal-card">
+            <div class="portal-card-glow"></div>
+            <div class="portal-card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <h3>Neural Scan</h3>
+            <p>Execute immediate road surface analysis using YOLOv8 computer vision.</p>
+            <div class="portal-card-action">Initialize Console &rarr;</div>
+        </a>
+
+        <!-- 2. LIVE CAMERA -->
+        <a href="/webcam" class="portal-card">
+            <div class="portal-card-glow"></div>
+            <div class="portal-card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+            </div>
+            <h3>Live Surveillance</h3>
+            <p>Real-time pothole tracking via integrated dashboard camera systems.</p>
+            <div class="portal-card-action">Launch Stream &rarr;</div>
+        </a>
+
+        <!-- 3. HISTORY -->
+        <a href="/history" class="portal-card">
+            <div class="portal-card-glow"></div>
+            <div class="portal-card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <h3>Analysis Logs</h3>
+            <p>Review comprehensive historical data and generated repair reports.</p>
+            <div class="portal-card-action">Open Archives &rarr;</div>
+        </a>
+
+        <!-- 4. TELEMETRY -->
+        <a href="/telemetry" class="portal-card">
+            <div class="portal-card-glow"></div>
+            <div class="portal-card-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            </div>
+            <h3>Spatial Intel</h3>
+            <p>Interactive geographic distribution of detected road infrastructure defects.</p>
+            <div class="portal-card-action">View Map &rarr;</div>
+        </a>
+    </div>
+
+    <div class="portal-footer">
+        System Status: <span class="status-online">Operational</span> | Neural Engine v4.2.0
+    </div>
+</div>
+
+</body>
+</html>

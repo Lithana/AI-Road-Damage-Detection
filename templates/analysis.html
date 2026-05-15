@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analysis Result - Veethi Shield</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+
+<!-- ---------------- SIDEBAR ---------------- -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <a href="/" class="logo-link"><img src="/static/images/logo.png" class="brand-logo" alt="Veethi Shield Logo"></a>
+        <h2>Veethi Shield</h2>
+    </div>
+    
+    <div class="sidebar-section-title">Operational Hub</div>
+    <a href="/scan">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+        Command Center
+    </a>
+    <a href="/webcam">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+        Live Camera
+    </a>
+    <a href="/history">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 12px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+        Analysis History
+    </a>
+</div>
+
+<!-- ---------------- MAIN CONTENT ---------------- -->
+<div class="container">
+
+    <div class="header-area">
+        <div>
+            <h1 class="header-title">Scan Intelligence</h1>
+            <p class="header-subtitle">Comprehensive neural breakdown for Session {{ analysis.id[:8] }}</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+            <a href="/report/{{ analysis.id }}" class="btn-primary" style="padding: 10px 20px; font-size: 13px; background: rgba(255,255,255,0.05); border: 1px solid var(--border-color);">Full Report</a>
+            <a href="/scan" class="btn-primary" style="padding: 10px 20px; font-size: 13px;">New Scan</a>
+        </div>
+    </div>
+
+    <!-- DASHBOARD GRID -->
+    <div class="dashboard-grid">
+        <!-- LEFT: VISUAL DATA -->
+        <div class="card visual-card" style="padding: 0; overflow: hidden;">
+            <div style="padding: 20px; border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02); display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; font-size: 16px;">Neural Inference Feed</h3>
+                <span class="status-badge" style="background: rgba(0, 242, 255, 0.1); color: var(--primary);">ACTIVE_SCAN</span>
+            </div>
+            <div class="media-container" style="background: #000; min-height: 400px; display: flex; align-items: center; justify-content: center;">
+                {% if analysis.type == 'Video' %}
+                <img src="/video_feed/{{ analysis.id }}.mp4" alt="Analysis Feed" style="max-width: 100%; height: auto;">
+                {% elif analysis.result_file %}
+                <img src="{{ analysis.result_file }}" alt="Analysis Result" style="max-width: 100%; height: auto;">
+                {% else %}
+                <div style="color: var(--text-secondary);">No visual evidence available for this session.</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- RIGHT: TELEMETRY & STATS -->
+        <div class="stats-sidebar">
+            <!-- Severity Card -->
+            <div class="card stat-card" style="margin-bottom: 24px;">
+                <h3 style="font-size: 14px; color: var(--primary); margin-bottom: 16px;">Detection Summary</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div>
+                        <div style="font-size: 32px; font-weight: 800; color: #fff;">{{ analysis.anomalies }}</div>
+                        <div style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">Potholes Detected</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="severity-tag {{ analysis.severity|lower }}" style="padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700;">
+                            {{ analysis.severity|upper }} RISK
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-bar-container" style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden;">
+                    <div class="progress-fill" style="height: 100%; width: {{ (analysis.anomalies / 20 * 100)|round|int if analysis.anomalies < 20 else 100 }}%; background: var(--primary); box-shadow: 0 0 10px var(--primary-glow);"></div>
+                </div>
+            </div>
+
+            <!-- Location Card -->
+            <div class="card location-card" style="padding: 0; overflow: hidden;">
+                <div style="padding: 20px; border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02);">
+                    <h3 style="margin: 0; font-size: 14px; color: var(--primary);">Spatial Intel</h3>
+                </div>
+                <div id="analysis-map" style="height: 250px; width: 100%;"></div>
+                <div style="padding: 20px;">
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 4px;">Zone Identification</div>
+                        <div style="font-size: 14px; font-weight: 600; color: #fff;">{{ analysis.specific_location }}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 10px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 4px;">Full Coordinate Set</div>
+                        <div style="font-size: 13px; color: var(--text-secondary);">{{ analysis.latitude }}° N, {{ analysis.longitude }}° E</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var map = L.map('analysis-map', {zoomControl: false}).setView([{{ analysis.latitude }}, {{ analysis.longitude }}], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        var customIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background: var(--primary); width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 10px var(--primary-glow);"></div>',
+            iconSize: [12, 12]
+        });
+        
+        L.marker([{{ analysis.latitude }}, {{ analysis.longitude }}], {icon: customIcon}).addTo(map);
+    });
+</script>
+
+<style>
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+    margin-top: 40px;
+    animation: slideUp 0.8s ease-out;
+}
+
+.severity-tag.high { background: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.3); }
+.severity-tag.medium { background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); }
+.severity-tag.normal { background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.3); }
+
+#analysis-map {
+    filter: hue-rotate(180deg) invert(1) contrast(0.9) brightness(1.2);
+}
+
+@media (max-width: 1100px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+</body>
+</html>
